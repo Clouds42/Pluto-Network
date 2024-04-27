@@ -9,6 +9,7 @@ tx_data = bpsk_tx_func(msg);
 
 %% Instantiate Pluto transmit class
 tx = pluto('usb', 'tx');
+tx.AttenuationChannel0 = 0;
 tx(tx_data); % transmit data
 
 %% Release Pluto classes(manually)

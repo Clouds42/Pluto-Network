@@ -13,11 +13,13 @@ function sys_obj = pluto(cable, mode)
             sys_obj = adi.Pluto.Tx;
             sys_obj.uri = uri;
             sys_obj.EnableCyclicBuffers = 1;
+            sys_obj.AttenuationChannel0 = 0;
             sys_obj.RFPortSelect = "B";
         case 'rx'
             sys_obj = adi.Pluto.Rx;
             sys_obj.uri = uri;
             sys_obj.RFPortSelect = "B_BALANCED";
+            sys_obj.SamplesPerFrame = 1e4;
         otherwise
             error(['Error: cant find mode ', mode, ', please check your input.'])
     end

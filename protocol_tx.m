@@ -9,6 +9,7 @@ tx_data = bpsk_tx_func(msg);
 
 %% Instantiate Pluto transmit class
 tx = pluto('usb', 'tx');
+tx.AttenuationChannel0 = 0;
 % tx.CenterFrequency = 2.4e9;
 tx(tx_data); % transmit data
 
@@ -26,9 +27,9 @@ while ~strcmp(msg_raw, 'Bye!')
     if valid
         disp(msg_raw);
     else
-        disp('Waiting...')
+        % disp('Waiting...')
     end
-    pause(1)
+    % pause(1)
 end
 disp('ACK Received! ');
 

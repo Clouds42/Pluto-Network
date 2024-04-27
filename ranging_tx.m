@@ -1,36 +1,46 @@
 clearvars; close all;
 
 %% Modulate message using BPSK
-msg = 'ASK'; % 60 bytes max
-if length(msg) > 60
-    error('Error: msg is too long, please make sure msg shorter than 60 bytes.');
-end
+msg = 'SEQ1';
 tx_data = bpsk_tx_func(msg);
 
 %% Instantiate Pluto transmit class
 tx = pluto('usb', 'tx');
 % tx.CenterFrequency = 2.4e9;
 tx(tx_data); % transmit data
+disp('001 Transmitted!');
 
 %% Instantiate Pluto receive class
 rx = pluto('usb', 'rx');
 rx.CenterFrequency = 2e9;
-rx.SamplesPerFrame = numel(tx_data) * 2;
 
 %% Demodulate message
 rx_data = rx(); % reveive data
 [msg_raw, valid] = bpsk_rx_func(rx_data);
-
-while ~strcmp(msg, 'ACK')
+while ~strcmp(msg_raw, 'ACK1')
+    rx_data = rx(); % reveive data
     [msg_raw, valid] = bpsk_rx_func(rx_data);
     if valid
         disp(msg_raw);
-        msg = 'ASK';
-        tx_data = bpsk_tx_func(msg);
-        tx(tx_data);
     end
-    pause(1)
 end
+disp('001 ACK Received!');
+
+msg = 'FIN';
+tx_data = bpsk_tx_func(msg);
+tx(tx_data); % transmit data
+disp('FIN Transmitted!');
+
+rx_data = rx(); % reveive data
+[msg_raw, valid] = bpsk_rx_func(rx_data);
+while ~strcmp(msg_raw, 'ACKF')
+    rx_data = rx(); % reveive data
+    [msg_raw, valid] = bpsk_rx_func(rx_data);
+    if valid
+        disp(msg_raw);
+    end
+end
+disp('FIN ACK Received!');
 
 %% Release Pluto classes
 tx.release;
