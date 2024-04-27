@@ -73,6 +73,7 @@ b = reshape(a, 16, 4);
 %% display
 receivedStr = deblank(char(b.'));
 rStr = receivedStr;
+rStr = rStr(1,:);
 
 % figure(2);clf;
 % subplot(231);
